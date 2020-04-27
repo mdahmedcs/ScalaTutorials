@@ -118,21 +118,7 @@ var rdd3 = rdd2.map(f=>f.split(","))
  val DF=spark.createDataFrame(samplerdd,schema)  //here StrucType takes array of StructFields 
  
  DF.show()
-
- 
-
   
-  
-  
-  
-  
-  
- 
-  
-     
-      
-      
-      
 
     }
 } 
