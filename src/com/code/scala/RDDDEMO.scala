@@ -73,7 +73,6 @@ var rdd3 = rdd2.map(f=>f.split(","))
   text.flatMap(x=>x.split(" ")).map(y=>(y,1)).reduceByKey(_+_).sortByKey().collect().foreach(println)   //one line computation for word count
   
   //RDD to DataFrame by manually specifying the schema
-  //Note: In Scala and Java, DataFrame is an alias to Dataset[Row]. 
   
   //RDD to dataframe using todf method
   
@@ -85,7 +84,6 @@ var rdd3 = rdd2.map(f=>f.split(","))
   result.printSchema()
   
   result.show();
-  
   
   //RDD to dataframe using spark.createDataFrame method. This approach has two methods
   
@@ -113,19 +111,15 @@ var rdd3 = rdd2.map(f=>f.split(","))
  val samplerdd=sc.parallelize(sample)
  
  //creating schema
- val fields = Array(StructField("name", StringType, nullable=true),StructField("id", IntegerType, nullable=true, metadata=null))  //Notice StructField has four parameters: name, type, nullable and metadata
- val schema = StructType(fields) //here we define schema as StrucType of array of StructFields
-
+ val fields = List(StructField("name", StringType, nullable=true),StructField("id", IntegerType, nullable=true))  //Notice Struct Field has three parameters: name, type and nullable
+ val schema = StructType(fields)
  
- //creating df by passing rdd(created from Seq of ROW type) and schema(StructType of Array of StructFields) arguments in createDataFrame method
+ //creating df by passing rdd and schema arguments in createDataFrame method
  val DF=spark.createDataFrame(samplerdd,schema)  //here StrucType takes array of StructFields 
  
  DF.show()
- 
- //Some Defitions:
- //spark.sql.types.StructType: It is a class to define the structure of the DataFrame and It is a collection or list on StructField objects. By calling printSchema() method on the DataFrame, StructType columns are represents as “struct”.
- //spark.sql.types.StructField: It is a class to define the column name(String), column type (DataType), nullable column (Boolean) and metadata (MetaData)
+ DF.printSchema()
+ println(DF.count())
   
-
     }
 } 
