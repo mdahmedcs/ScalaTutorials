@@ -1,7 +1,20 @@
+/*
+ * 
+ * 
+ * 
+ * */
+
+
 package com.code.scala
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.IntegerType
+
 
 object RDDDEMO{  
     def main(args:Array[String]): Unit={  
@@ -57,7 +70,61 @@ var rdd3 = rdd2.map(f=>f.split(","))
   //word count example
   val text=sc.textFile("E:\\spark_examples\\words.txt")
   
-  text.flatMap(x=>x.split(" ")).map(y=>(y,1)).reduceByKey(_+_).collect().foreach(println)
+  text.flatMap(x=>x.split(" ")).map(y=>(y,1)).reduceByKey(_+_).sortByKey().collect().foreach(println)   //one line computation for word count
+  
+  //RDD to DataFrame by manually specifying the schema
+  
+  //RDD to dataframe using todf method
+  
+  import spark.implicits._
+  val data=Seq(("ahmed", 100), ("mike", 200))
+  
+  val result=sc.parallelize(data).toDF("name" ,"id")    //creating rdd and converting to DF using toDF method, note it is not necessary to manually mention sc.parallelize, we can instead just use data.toDF("name", "id")
+  
+  result.printSchema()
+  
+  result.show();
+  
+  //RDD to dataframe using spark.createDataFrame method. This approach has two methods
+  
+  //method1: it takes rdd object as an argument. and chain it with toDF() to specify names to the columns.
+  // val dfFromRDD2 = spark.createDataFrame(rdd).toDF(columns:_*)
+  //Here, we are using scala operator :_* to explode columns array to comma-separated values.
+    
+    val sampledata=Seq(("ahmed", 100), ("mike", 200),("john", 300))
+    val columns=Seq("name", "id")
+    
+    val sampledatardd=sc.parallelize(sampledata)
+    val resultDF = spark.createDataFrame(sampledatardd).toDF(columns:_*)
+    resultDF.show()
+    
+    // Method2: passing rdd and schema arguments in createDataFrame method
+    //syntax: DF= spark.createDataFrame(rdd,schema)
+    //To use this first, we need to convert our “rdd” object from RDD[T] to RDD[Row]. To define a schema, we use StructType that takes an array of StructField. And StructField takes column name, data type and nullable/not as arguments.
+   //Steps:
+   //Create an RDD of Rows from the original RDD;
+   //Create the schema represented by a StructType matching the structure of Rows in the RDD created in Step 1.
+   // Apply the schema to the RDD of Rows via createDataFrame method provided by SparkSession.
+
+ //creating rdd   
+ val sample=Seq(Row("ahmed", 100), Row("mike", 200), Row("john", 300), Row("nick", 400), Row("michael", 500))
+ val samplerdd=sc.parallelize(sample)
+ 
+ //creating schema
+ val fields = List(StructField("name", StringType, nullable=true),StructField("id", IntegerType, nullable=true))  //Notice Struct Field has three parameters: name, type and nullable
+ val schema = StructType(fields)
+ 
+ //creating df by passing rdd and schema arguments in createDataFrame method
+ val DF=spark.createDataFrame(samplerdd,schema)  //here StrucType takes array of StructFields 
+ 
+ DF.show()
+
+ 
+
+  
+  
+  
+  
   
   
  
