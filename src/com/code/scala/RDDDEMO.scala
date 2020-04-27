@@ -117,10 +117,14 @@ var rdd3 = rdd2.map(f=>f.split(","))
  val schema = StructType(fields) //here we define schema as StrucType of array of StructFields
 
  
- //creating df by passing rdd and schema arguments in createDataFrame method
+ //creating df by passing rdd(created from Seq of ROW type) and schema(StructType of Array of StructFields) arguments in createDataFrame method
  val DF=spark.createDataFrame(samplerdd,schema)  //here StrucType takes array of StructFields 
  
  DF.show()
+ 
+ //Some Defitions:
+ //spark.sql.types.StructType: It is a class to define the structure of the DataFrame and It is a collection or list on StructField objects. By calling printSchema() method on the DataFrame, StructType columns are represents as “struct”.
+ //spark.sql.types.StructField: It is a class to define the column name(String), column type (DataType), nullable column (Boolean) and metadata (MetaData)
   
 
     }
