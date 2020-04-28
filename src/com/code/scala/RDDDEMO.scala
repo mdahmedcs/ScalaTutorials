@@ -54,7 +54,7 @@ object RDDDEMO{
       
       // Method2: Reading from files: Text, CSV, 
       
-     val rdd2=sc.textFile("C:\\Users\\ahmed\\Downloads\\subscribers.csv,C:\\Users\\ahmed\\Downloads\\subscribers.csv") //reading from gitttttttmultiple files
+     val rdd2=sc.textFile("C:\\Users\\ahmed\\Downloads\\subscribers.csv,C:\\Users\\ahmed\\Downloads\\subscribers.csv") //reading from multiple files
      
      rdd2.collect().take(10).foreach(println)
      println("count: "+rdd2.count())
@@ -100,7 +100,7 @@ var rdd3 = rdd2.map(f=>f.split(","))
     
     // Method2: passing rdd and schema arguments in createDataFrame method
     //syntax: DF= spark.createDataFrame(rdd,schema)
-    //To use this first, we need to convert our “rdd” object from RDD[T] to RDD[Row]. To define a schema, we use StructType that takes an array of StructField. And StructField takes column name, data type and nullable/not as arguments.
+    //To use this first, we need to convert our “rdd” object from RDD[T] to RDD[Row]. To define a schema, we use StructType that takes an array of StructField. And StructField takes column name, data type  nullable/not as arguments.
    //Steps:
    //Create an RDD of Rows from the original RDD;
    //Create the schema represented by a StructType matching the structure of Rows in the RDD created in Step 1.
@@ -111,9 +111,8 @@ var rdd3 = rdd2.map(f=>f.split(","))
  val samplerdd=sc.parallelize(sample)
  
  //creating schema
- val fields = List(StructField("name", StringType, nullable=true),StructField("id", IntegerType, nullable=true))  //Notice Struct Field has three parameters: name, type and nullable
- val schema = StructType(fields)
- 
+ val schema = StructType(Array(StructField("name", StringType, nullable=true),StructField("id", IntegerType, nullable=true)))  //schema is StructType of Array of StructFields
+  
  //creating df by passing rdd and schema arguments in createDataFrame method
  val DF=spark.createDataFrame(samplerdd,schema)  //here StrucType takes array of StructFields 
  

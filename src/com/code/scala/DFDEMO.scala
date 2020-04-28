@@ -125,10 +125,7 @@ object DFDEMO {
      val schemajson = StructType(Array(StructField("city", StringType, nullable=true),StructField("recnum", LongType, nullable=true),StructField("state", StringType, nullable=true),StructField("type", StringType, nullable=true),
        StructField("zipcode", LongType, nullable=true)))
        
-      val dfjsonsamplejson = spark.read.format("json") 
-                             .option("inferschema","false")
-                             .schema(schemajson)
-                             .load("E:\\spark_examples\\subscribers.json")
+      val dfjsonsamplejson = spark.read.schema(schemajson).json("E:\\spark_examples\\subscribers.json")
                              
       dfjsonsamplejson.show()
       dfjsonsamplejson.printSchema()
