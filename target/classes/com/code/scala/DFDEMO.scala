@@ -111,6 +111,8 @@ object DFDEMO {
    
      dfsamplecsv.show(100,false)
      dfsamplecsv.printSchema()
+     
+     
    
   // Redaing from JSON. for JSON infershema is true by default
      println("reading from json using infeschema, by default true")
@@ -119,11 +121,14 @@ object DFDEMO {
      
      dfjson.show(10,false)
      dfjson.printSchema()
+          
+//     println("writing data to json file")
+//     dfjson.write.json("E:\\spark_examples\\subscribers_json.json") : 4 savemodes: overwrite, append, ignore, default:errorifexists
      
   // Reading from JSON by programatically specifying schema
      
      val schemajson = StructType(Array(StructField("city", StringType, nullable=true),StructField("recnum", LongType, nullable=true),StructField("state", StringType, nullable=true),StructField("type", StringType, nullable=true),
-       StructField("zipcode", LongType, nullable=true)))
+     StructField("zipcode", LongType, nullable=true)))
        
       val dfjsonsamplejson = spark.read.schema(schemajson).json("E:\\spark_examples\\subscribers.json")
                              
